@@ -1,0 +1,37 @@
+#!/usr/local/bin/python3
+#
+# Picks random lines from the provided data file. This is a beefier version of
+# randomLine and is useful for extracting rich, random data samples.
+
+import sys
+import argparse
+from random import randint
+
+parser = argparse.ArgumentParser(description="Picks random lines from the provided data file. This is a beefier version of randomLine and is useful for extracting rich, random data samples.")
+parser.add_argument("-i", "--input", required=True, nargs='?', type=argparse.FileType('r'), action="store", dest="input", metavar="file", help="data file to extract random lines from")
+parser.add_argument("-o", "--output", required=False, nargs='?', type=argparse.FileType('w'), default=sys.stdout, metavar="file", help="desired output (default: standard out)")
+parser.add_argument("-n", "--lines", required=False, nargs='?', action="store", dest="numberOfRandomLines", default=10, metavar="N", type=int, help="number of random lines to extract (default: 10)")
+args = parser.parse_args()
+
+def representsInt(s):
+	try: 
+		int(s)
+		return True
+	except ValueError:
+		return False
+
+lines = args.input.readlines()
+lineCount = len(lines)
+
+if args.numberOfRandomLines > lineCount:
+	print("Desired number of random lines exceeds data file line count")
+	sys.exit(1)
+
+for i in range(args.numberOfRandomLines):
+	randomLineNumber = randint(0, lineCount-1)
+	# Remove the line (so it won't be picked again)
+	args.output.write(lines.pop(randomLineNumber))
+	lineCount -= 1
+
+args.input.close()
+args.output.close()

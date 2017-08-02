@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# Prints a random line from the provided data file to standard out, good for
+# getting a quick and dirty data point.
+
+head -$((${RANDOM} % `wc -l < $1` + 1)) $1 | tail -1

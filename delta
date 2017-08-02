@@ -1,0 +1,33 @@
+#!/usr/local/bin/python3
+#
+# Extracts delta contents of the two provided data files. This is the lines
+# that are shared/common between the two files.
+
+import sys
+import argparse
+
+parser = argparse.ArgumentParser(description="Extracts delta contents of the two provided data files. This is the lines that are shared/common between the two files.")
+parser.add_argument("-i", "--input", required=True, nargs=2,  type=argparse.FileType('r'), action="store", dest="inputFiles", metavar=('file1', 'file2'), help="exactly two files to extract delta contents from")
+parser.add_argument("-o", "--output", required=False, nargs='?', type=argparse.FileType('w'), default=sys.stdout, metavar="file", help="desired output (default: standard out)")
+args = parser.parse_args()
+
+file1Contents = set()
+for line in args.inputFiles[0]:
+	file1Contents.add(line.strip())
+
+deltaContents = []
+for line in args.inputFiles[1]:
+	line = line.strip()
+	if line in file1Contents:
+		deltaContents.append(line)
+
+if deltaContents:
+	for line in deltaContents:
+		args.output.write(line)
+		args.output.write("\n")
+	args.output.close()
+else:
+	print("No shared data between the two files, no delta file will be created")
+
+args.inputFiles[0].close()
+args.inputFiles[1].close()
