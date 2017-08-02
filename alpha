@@ -29,9 +29,9 @@ if alphaContents:
 	for line in alphaContents:
 		args.output.write(line)
 		args.output.write("\n")
+	args.output.close()
 else:
 	print("No unique data between the two files, no alpha file will be created")
 
-args.output.close()
 args.inputFiles[0].close()
 args.inputFiles[1].close()

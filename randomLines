@@ -20,12 +20,16 @@ def representsInt(s):
 	except ValueError:
 		return False
 
+if args.numberOfRandomLines <= 0:
+	print("Only positive integers are supported for the desired sample size")
+	sys.exit(1)
+
 lines = args.input.readlines()
 lineCount = len(lines)
 
 if args.numberOfRandomLines > lineCount:
 	print("Desired number of random lines exceeds data file line count")
-	sys.exit(1)
+	sys.exit(2)
 
 for i in range(args.numberOfRandomLines):
 	randomLineNumber = randint(0, lineCount-1)
