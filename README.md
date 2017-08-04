@@ -5,6 +5,10 @@ Scripts
 
 Extracts alpha contents of the two provided data files. This is the lines that are NOT shared/common between the two files (meaning, the unique lines).
 
+## [checksum](https://github.com/barrowclift/scripts/blog/master/checksum)
+
+Outputs the md5 sha1 checksum for the provided file or standard input text.
+
 ## [delta](https://github.com/barrowclift/scripts/blob/master/delta)
 
 Extracts delta contents of the two provided data files. This is the lines that are shared/common between the two files.

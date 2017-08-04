@@ -1,0 +1,52 @@
+#!/usr/local/bin/python3
+# 
+# Outputs the md5 sha1 checksums for the provided file or standard input text.
+
+import sys
+import argparse
+import hashlib
+
+parser = argparse.ArgumentParser(description="Outputs the md5 sha1 checksum for the provided file or standard input text.")
+parser.add_argument("-s", "--string", metavar=('string1', 'string2'), nargs='+', dest="inputStrings", help="strings to create checksums of")
+parser.add_argument("-i", "--input", metavar=('file1', 'file2'), nargs='+', type=argparse.FileType('rb'), action="store", dest="inputFiles", help="files to create checksums of")
+parser.add_argument("-u", "--upper", required=False, action="store_const", const=True, default=False, dest="uppercase", help="output checksums in upper case (default: False)")
+
+args = parser.parse_args()
+
+if not args.inputStrings and not args.inputFiles:
+	parser.print_help()
+	sys.exit(1)
+
+def printChecksums(md5, sha1):
+	if args.uppercase:
+		print("  MD5: {0}".format(md5.hexdigest().upper()))
+		print("  SHA1: {0}".format(sha1.hexdigest().upper()))
+	else:
+		print("  MD5: {0}".format(md5.hexdigest()))
+		print("  SHA1: {0}".format(sha1.hexdigest()))
+
+if args.inputStrings:
+	for string in args.inputStrings:
+		md5 = hashlib.md5(string.encode('utf-8'))
+		sha1 = hashlib.sha1(string.encode('utf-8'))
+		print(string)
+		printChecksums(md5, sha1)
+
+# Thanks to ranman for his solution
+# https://stackoverflow.com/a/22058673/3293952
+if args.inputFiles:
+	BUF_SIZE = 131072
+	for file in args.inputFiles:
+		md5 = hashlib.md5()
+		sha1 = hashlib.sha1()
+		while True:
+			data = file.read(BUF_SIZE)
+			if not data:
+				break
+			md5.update(data)
+			sha1.update(data)
+
+		print(file.name)
+		printChecksums(md5, sha1)
+
+		file.close()
