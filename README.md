@@ -20,3 +20,7 @@ Prints a random line from the provided data file to standard out, good for getti
 ## [randomLines](https://github.com/barrowclift/scripts/blob/master/randomLines)
 
 Picks random lines from the provided data file. This is a beefier version of randomLine and is useful for extracting rich, random data samples.
+
+## [sendEmail](https://github.com/barrowclift/scripts/blob/master/sendEmail)
+
+Send an email with the specified subject and body to the desired address. Useful for sending out notifications after long-running scripts have completed. Utilizes the `/usr/sbin/sendmail` command, and your mileage may vary depending on your particular system and `sendmail` version.

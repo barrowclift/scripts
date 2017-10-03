@@ -1,0 +1,42 @@
+#!/usr/local/bin/python3
+#
+# Send an email with the specified subject and body to the desired address.
+# Useful for sending out notifications after long-running scripts have
+# completed. Utilizes the /usr/sbin/sendmail command, and your mileage may
+# vary depending on your particular system and sendmail version.
+
+# ARGUMENT PARSING ###############################################################################
+
+import sys
+import argparse
+import re
+import time
+import os
+
+parser = argparse.ArgumentParser(description="Sends an email to the provided address with the desired message")
+parser.add_argument("-v", "--verbose", required=False, action="store_const", const=True, default=False, help="increase verbosity (default: False)")
+parser.add_argument("-a", "--address", required=True, action="store", dest="address", metavar="\"Email Address\"", help="email address to send the email to")
+parser.add_argument("-s", "--subject", required=False, action="store", dest="subject", default="Automated Email Alert", metavar="\"Subject\"", help="the desired email subject (default: \"Automated Email Alert\")")
+parser.add_argument("-b", "--body", required=True, action="store", dest="body", metavar="\"Body\"", help="the body of the email to send.")
+args = parser.parse_args()
+
+# CONSTRUCT EMAIL FILE
+###############################################################################
+
+SUBJECT = args.subject
+CONTENT_TYPE = "text/html"
+BODY = args.body + "\n"
+
+timestamp = time.strftime("%Y%m%d-%H%M%S")
+emailFilepath = "/tmp/email_" + timestamp + ".txt"
+with open(emailFilepath, 'w') as emailFile:
+	emailFile.write("Subject: " + SUBJECT + "\n")
+	emailFile.write("Content-Type: " + CONTENT_TYPE + "\n\n")
+	emailFile.write(BODY)
+emailFile.close()
+
+# SEND EMAIL
+###############################################################################
+
+os.system("/usr/sbin/sendmail " + args.address + " < " + emailFilepath)
+os.remove(emailFilepath)
